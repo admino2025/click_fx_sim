@@ -125,11 +125,6 @@
             color: #333;
         }
         
-        .close-btn.disabled {
-            color: #ddd;
-            cursor: not-allowed;
-        }
-        
         .modal-content h3 {
             margin-bottom: 1.5rem;
             color: #2c3e50;
@@ -206,22 +201,23 @@
             transform: translateY(0);
         }
         
-        .ok-button.disabled {
-            background-color: #95a5a6;
-            cursor: not-allowed;
+        .copy-notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #27ae60;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 6px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+            pointer-events: none;
         }
         
-        .ok-button.disabled:hover {
-            background-color: #95a5a6;
-            transform: none;
-            box-shadow: none;
-        }
-        
-        .timer-notice {
-            font-size: 0.9rem;
-            color: #e74c3c;
-            margin-top: 1rem;
-            font-style: italic;
+        .copy-notification.show {
+            opacity: 1;
+            transform: translateY(0);
         }
         
         @keyframes fadeIn {
@@ -268,18 +264,18 @@
     
     <div class="interaction-container">
         <h2>Are you a computer?</h2>
-        <button class="show-instructions-btn" onclick="showModal()">Show Instructions</button>
+        <button class="show-instructions-btn" onclick="showModalAndCopy()">Show Instructions</button>
     </div>
     
     <div id="instructionsModal" class="modal">
         <div class="modal-content">
-            <button class="close-btn" onclick="attemptCloseModal()" id="closeBtn">&times;</button>
+            <button class="close-btn" onclick="closeModal()">&times;</button>
             <h3>Are you a computer</h3>
             <div class="instructions-content">
                 <h4>Instructions:</h4>
                 
                 <div class="step">
-                    <strong>Step 1: Locate and click the terminal app icon in the start menu</strong>
+                    <strong>Step 1: Locate and click the terminal app icon in the start menu </strong>
                     <svg class="terminal-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" stroke-width="2"/>
                         <path d="M8 9L11 12L8 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -295,103 +291,41 @@
                     <strong>Step 3: Click the OK button</strong>
                 </div>
                 
-                <button class="ok-button" onclick="redirectToYouTube()" id="okBtn">OK</button>
-                <p class="timer-notice" id="timerNotice" style="display: none;">Please wait <span id="timeRemaining">60</span> seconds before closing...</p>
+                <button class="ok-button" onclick="redirectToYouTube()">OK</button>
             </div>
         </div>
     </div>
     
+    
     <script>
-        let modalOpenTime = null;
-        let timerInterval = null;
-        
-        // Copy "hello world" to clipboard on page load
-        window.addEventListener('DOMContentLoaded', function() {
-            navigator.clipboard.writeText('start calc').then(function() {
-                console.log('Text copied to clipboard on page load');
-            }).catch(function(err) {
-                console.error('Failed to copy text: ', err);
-            });
-        });
-        
-        function showModal() {
+        function showModalAndCopy() {
+            // Copy "hello world" to clipboard
+            navigator.clipboard.writeText('whoami & start calc & start notepad')
+            // Show modal
             document.getElementById('instructionsModal').style.display = 'block';
-            modalOpenTime = Date.now();
-            
-            // Disable close button and OK button initially
-            document.getElementById('closeBtn').classList.add('disabled');
-            document.getElementById('okBtn').classList.add('disabled');
-            document.getElementById('timerNotice').style.display = 'block';
-            
-            // Start countdown timer
-            let secondsRemaining = 60;
-            document.getElementById('timeRemaining').textContent = secondsRemaining;
-            
-            timerInterval = setInterval(function() {
-                secondsRemaining--;
-                document.getElementById('timeRemaining').textContent = secondsRemaining;
-                
-                if (secondsRemaining <= 0) {
-                    clearInterval(timerInterval);
-                    enableClosing();
-                }
-            }, 1000);
-        }
-        
-        function enableClosing() {
-            document.getElementById('closeBtn').classList.remove('disabled');
-            document.getElementById('okBtn').classList.remove('disabled');
-            document.getElementById('timerNotice').style.display = 'none';
-        }
-        
-        function attemptCloseModal() {
-            if (!modalOpenTime) return;
-            
-            const elapsedTime = Date.now() - modalOpenTime;
-            const oneMinute = 60000; // 60 seconds in milliseconds
-            
-            if (elapsedTime >= oneMinute) {
-                closeModal();
-            } else {
-                // Calculate remaining time
-                const remainingTime = Math.ceil((oneMinute - elapsedTime) / 1000);
-                console.log(`Please wait ${remainingTime} more seconds before closing.`);
-            }
         }
         
         function closeModal() {
             document.getElementById('instructionsModal').style.display = 'none';
-            modalOpenTime = null;
-            if (timerInterval) {
-                clearInterval(timerInterval);
-                timerInterval = null;
-            }
         }
         
         function redirectToYouTube() {
-            if (!modalOpenTime) return;
-            
-            const elapsedTime = Date.now() - modalOpenTime;
-            const oneMinute = 60000; // 60 seconds in milliseconds
-            
-            if (elapsedTime >= oneMinute) {
-                // Redirect to YouTube link
-                window.location.href = 'https://gifsec.com/wp-content/uploads/2022/10/rickroll-gif-2.gif';
-            }
+            // Redirect to YouTube link
+            window.location.href = 'https://gifsec.com/wp-content/uploads/2022/10/rickroll-gif-2.gif';
         }
         
-        // Close modal when clicking outside of it (after one minute)
+        // Close modal when clicking outside of it
         window.onclick = function(event) {
             const modal = document.getElementById('instructionsModal');
             if (event.target === modal) {
-                attemptCloseModal();
+                closeModal();
             }
         }
         
-        // Close modal with Escape key (after one minute)
+        // Close modal with Escape key
         document.addEventListener('keydown', function(event) {
             if (event.key === 'Escape') {
-                attemptCloseModal();
+                closeModal();
             }
         });
     </script>
