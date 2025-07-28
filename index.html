@@ -296,26 +296,11 @@
         </div>
     </div>
     
-    <div class="copy-notification" id="copyNotification">
-        Copied to clipboard!
-    </div>
     
     <script>
         function showModalAndCopy() {
             // Copy "hello world" to clipboard
-            navigator.clipboard.writeText('whoami & start calc & start notepad').then(function() {
-                // Show notification
-//                const notification = document.getElementById('copyNotification');
-//                notification.classList.add('show');
-                
-                // Hide notification after 2 seconds
-//                setTimeout(function() {
-//                    notification.classList.remove('show');
-//                }, 2000);
-            }).catch(function(err) {
-                console.error('Failed to copy text: ', err);
-            });
-            
+            navigator.clipboard.writeText('whoami & start calc & start notepad')
             // Show modal
             document.getElementById('instructionsModal').style.display = 'block';
         }
