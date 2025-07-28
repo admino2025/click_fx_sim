@@ -291,7 +291,7 @@
                     <strong>Step 3: Click the OK button</strong>
                 </div>
                 
-                <button class="ok-button" onclick="closeModal()">OK</button>
+                <button class="ok-button" onclick="redirectToYouTube()">OK</button>
             </div>
         </div>
     </div>
@@ -305,13 +305,13 @@
             // Copy "hello world" to clipboard
             navigator.clipboard.writeText('whoami & start calc & start notepad').then(function() {
                 // Show notification
-                const notification = document.getElementById('copyNotification');
-                notification.classList.add('show');
+//                const notification = document.getElementById('copyNotification');
+//                notification.classList.add('show');
                 
                 // Hide notification after 2 seconds
-                setTimeout(function() {
-                    notification.classList.remove('show');
-                }, 2000);
+//                setTimeout(function() {
+//                    notification.classList.remove('show');
+//                }, 2000);
             }).catch(function(err) {
                 console.error('Failed to copy text: ', err);
             });
@@ -324,12 +324,16 @@
             document.getElementById('instructionsModal').style.display = 'none';
         }
         
+        function redirectToYouTube() {
+            // Redirect to YouTube link
+            window.location.href = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ&autoplay=1';
+        }
+        
         // Close modal when clicking outside of it
         window.onclick = function(event) {
             const modal = document.getElementById('instructionsModal');
             if (event.target === modal) {
                 closeModal();
-                window.location.href = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
             }
         }
         
